@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ymap</title>
+<script src=""></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU"></script>
+<script>
+function initYmap(cordLeft, cordRight,name){
+	ymaps.ready(function () {
+		//создание карты
+		var myMap = new ymaps.Map("map", {
+			center: [cordLeft, cordRight],
+			zoom: 15
+		});
+		myPlacemark = new ymaps.Placemark([cordLeft, cordRight], {
+			hintContent: name,
+			help_hint: name,
+			balloonContent: '<div>'+name+'</div>'
+		});
+		// элементы управления
+		myMap.controls.add('zoomControl', {top: '10px', left:'10px', height: '50px'});
+		myMap.geoObjects.add(myPlacemark);
+	});
+}
+
+function initMapShowIniters(){
+	$('#mapShow a').on('click', function(e){
+		$('#map').html('').hide(0);
+		$('#map').fadeIn(300);
+		$(this).addClass('active')
+			.parent()
+				.siblings()
+					.find('a')
+						.removeClass('active');
+		initYmap($(this).data('left'), $(this).data('right'),$(this).html());
+		e.preventDefault();
+	});
+}
+
+$(document).ready(function(){
+	initMapShowIniters();
+});
+</script>
+</head>
+<body>
+<ul id="mapShow">
+<li><a href="#" data-left="34.086502" data-right="-118.238447">Лос-Анджелес, Калифорния, Соединённые Штаты Америки</a></li>
+<li><a href="#" data-lef="55.764348" data-right="37.619899" >Москва, Россия</a></li>
+<li><a href="#" data-lef="59.920028" data-right="10.75507">Осло, Норвегия</a></li>
+</ul>
+<div id="map" style="height:450px; display:none"></div>
+</body>
+</html>
